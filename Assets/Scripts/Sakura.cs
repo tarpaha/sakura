@@ -4,15 +4,10 @@ using System.Collections.Generic;
 
 public class Sakura : MonoBehaviour
 {
-    #region creation
+    #region exposed
 
-    public static Sakura Create(Vector2 position)
-    {
-        GameObject go = new GameObject("Sakura");
-        Sakura sakura = go.AddComponent<Sakura>();
-        sakura.transform.position = position;
-        return sakura;
-    }
+    public Grower Grower;
+    public Drawer Drawer;
 
     #endregion
 
@@ -23,7 +18,15 @@ public class Sakura : MonoBehaviour
 
     private void Start()
     {
-        Grow();
+        GrowAndDraw();
+    }
+
+    private void Update()
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            GrowAndDraw();
+        }
     }
 
     #endregion
@@ -33,10 +36,20 @@ public class Sakura : MonoBehaviour
 
     #region private functions
 
-    private void Grow()
+    private void GrowAndDraw()
     {
-        Branch.Create(transform, transform.position, Vector2.up);
+        _treeData = Grower.Grow();
+        Drawer.Draw(_treeData);
     }
+
+    #endregion
+
+    ////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
+
+    #region data
+
+    private TreeData _treeData;
 
     #endregion
 }
