@@ -14,11 +14,13 @@ public class TreeData
     public class Vertex
     {
         public Vector2 Pos;
+        public Vector2 Dir;
         public float Size;
 
-        public Vertex(Vector2 pos, float size)
+        public Vertex(Vector2 pos, Vector2 dir, float size)
         {
             Pos = pos;
+            Dir = dir;
             Size = size;
         }
     }

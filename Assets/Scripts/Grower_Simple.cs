@@ -30,7 +30,7 @@ public class Grower_Simple : Grower
         
         while(l <= L)
         {
-            branch.AddVertex(new TreeData.Vertex(pos, size));
+            branch.AddVertex(new TreeData.Vertex(pos, dir, size));
 
             dir = (dir + 0.15f * Random.insideUnitCircle).normalized;
             l += L_delta;
