@@ -6,13 +6,16 @@ public class Grower_Parts : Grower
 {
     #region exposed
 
-    public int Seed;
+    public int Seed = 0;
 
-    public float L;
-    public float L_delta;
+    public float L = 2.0f;
+    public float L_delta = 0.02f;
 
-    public int PartsCount;
-    public float PartLengthDeviation;
+    public float MaxAngleDeviationLeft = 19.0f;
+    public float MaxAngleDeviationRight = 18.0f;
+
+    public int PartsCount = 4;
+    public float PartLengthDeviation = 0.1f;
 
     #endregion
 
@@ -23,6 +26,11 @@ public class Grower_Parts : Grower
 
     public override TreeData Grow()
     {
+        if(L_delta < 0.01f)
+        {
+            return new TreeData();
+        }
+
         Random.seed = Seed;
         List<float> lengts = GetPartLengths(L, PartsCount, PartLengthDeviation);
 
@@ -41,7 +49,10 @@ public class Grower_Parts : Grower
         {
             branch.AddVertex(new TreeData.Vertex(pos, dir, width));
 
-            dir = (dir + 0.15f * Random.insideUnitCircle).normalized;
+            float angle = Random.Range(-MaxAngleDeviationRight, MaxAngleDeviationLeft);
+            Quaternion rot = Quaternion.AngleAxis(angle, Vector3.forward);
+
+            dir = rot * dir;
             l += L_delta;
             
             pos += dir * L_delta;
