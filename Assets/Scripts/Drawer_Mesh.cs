@@ -57,8 +57,12 @@ public class Drawer_Mesh : Drawer
         for(int i = 0; i < list.Count; i++)
         {
             Vector3 pos = list[i].Pos;
-            vertices[i * 2 + 0] = pos + new Vector3(-list[i].Size/2, 0.0f, 0.0f);
-            vertices[i * 2 + 1] = pos + new Vector3(+list[i].Size/2, 0.0f, 0.0f);
+            Vector3 perp = new Vector3(list[i].Dir.y, -list[i].Dir.x);
+
+            perp *= list[i].Size / 2;
+
+            vertices[i * 2 + 0] = pos - perp;
+            vertices[i * 2 + 1] = pos + perp;
         }
 
         int[] triangles = new int[6 * (list.Count - 1)];
