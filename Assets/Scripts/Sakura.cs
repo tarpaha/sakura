@@ -21,9 +21,9 @@ public class Sakura : MonoBehaviour
         GrowAndDraw();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        if(Input.GetMouseButtonDown(0))
+        //if(Input.GetMouseButtonDown(0))
         {
             GrowAndDraw();
         }
