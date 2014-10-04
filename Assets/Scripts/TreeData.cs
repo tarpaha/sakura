@@ -13,7 +13,7 @@ public class TreeData
 
     public class Vertex
     {
-        public Vector3 Pos;
+        public Vector2 Pos;
         public float Size;
 
         public Vertex(Vector2 pos, float size)
