@@ -33,19 +33,19 @@ public class Grower_Parts : Grower
         
         float l = 0.0f;
 
-        float size = 0.05f;
-        float ds = -0.01f;
+        float width = 0.05f;
+        float dw = -0.01f;
         
         Random.seed = Seed;
         while(l <= L)
         {
-            branch.AddVertex(new TreeData.Vertex(pos, dir, size));
+            branch.AddVertex(new TreeData.Vertex(pos, dir, width));
 
             dir = (dir + 0.15f * Random.insideUnitCircle).normalized;
             l += L_delta;
             
             pos += dir * L_delta;
-            size += L_delta * ds;
+            width += L_delta * dw;
         }
 
         TreeData treeData = new TreeData();

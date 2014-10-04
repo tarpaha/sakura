@@ -59,7 +59,7 @@ public class Drawer_Mesh : Drawer
             Vector3 pos = list[i].Pos;
             Vector3 perp = new Vector3(list[i].Dir.y, -list[i].Dir.x);
 
-            perp *= list[i].Size / 2;
+            perp *= list[i].Width / 2;
 
             vertices[i * 2 + 0] = pos - perp;
             vertices[i * 2 + 1] = pos + perp;

@@ -50,7 +50,7 @@ public class Drawer_Line : Drawer
 
         LineRenderer lr = go.AddComponent<LineRenderer>();
         lr.SetVertexCount(vertices.Count);
-        lr.SetWidth(vertices[0].Size, vertices[vertices.Count-1].Size);
+        lr.SetWidth(vertices[0].Width, vertices[vertices.Count-1].Width);
         lr.material = LineMaterial;
         lr.SetColors(ColorStart, ColorEnd);
 

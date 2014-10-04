@@ -25,18 +25,18 @@ public class Grower_Simple : Grower
         
         float l = 0.0f;
 
-        float size = 0.05f;
-        float ds = -0.01f;
+        float witdh = 0.05f;
+        float dw = -0.01f;
         
         while(l <= L)
         {
-            branch.AddVertex(new TreeData.Vertex(pos, dir, size));
+            branch.AddVertex(new TreeData.Vertex(pos, dir, witdh));
 
             dir = (dir + 0.15f * Random.insideUnitCircle).normalized;
             l += L_delta;
             
             pos += dir * L_delta;
-            size += L_delta * ds;
+            witdh += L_delta * dw;
         }
 
         TreeData treeData = new TreeData();

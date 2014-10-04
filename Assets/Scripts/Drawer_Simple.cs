@@ -37,7 +37,7 @@ public class Drawer_Simple : Drawer
             GameObject go = GameObject.CreatePrimitive(PrimitiveType.Quad);
             go.transform.parent = transform;
             go.transform.position = vertex.Pos;
-            go.transform.localScale = vertex.Size * Vector3.one;
+            go.transform.localScale = vertex.Width * Vector3.one;
         }
     }
 
