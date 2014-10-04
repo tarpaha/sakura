@@ -72,9 +72,21 @@ public class Drawer_Mesh : Drawer
             triangles[6 * i + 5] = 2 * i + 3;
         }
 
+        Vector2[] uv = new Vector2[list.Count * 2];
+        float du = 1.0f / (list.Count - 1);
+        for(int i = 0; i < list.Count; i++)
+        {
+            uv[i * 2 + 0] = new Vector2(0.0f, du * i);
+            uv[i * 2 + 1] = new Vector2(1.0f, du * i);
+        }
+        
         Mesh mesh = new Mesh();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
+        mesh.uv = uv;
+
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
 
         return mesh;
     }
