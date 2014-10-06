@@ -274,6 +274,8 @@ MonoBehaviour:
   AngleDeviation: 25
   Side: .400000006
   SideGap: .200000003
+  Width01: .100000001
+  Width02: .00999999978
 --- !u!4 &2009768322
 Transform:
   m_ObjectHideFlags: 0
