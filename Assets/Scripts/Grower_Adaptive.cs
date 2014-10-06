@@ -71,75 +71,95 @@ public class Grower_Adaptive : Grower
 
     #region private functions
 
+    /// <summary>
+    /// Create fan of possible directions, assign probability to each and select random
+    /// </summary>
     private Vector2 GetNextDir(Vector2 pos, Vector2 dir)
     {
-        Vector2[] directions = new Vector2[LOOKING_STEPS];
-        Vector2[] positions = new Vector2[LOOKING_STEPS];
-        float[] probability = new float[LOOKING_STEPS];
-        for(int i = 0; i < LOOKING_STEPS; i++)
-        {
-            float a = -AngleDeviation + 2.0f * AngleDeviation * i / (LOOKING_STEPS - 1);
-            directions[i] = Quaternion.AngleAxis(a, Vector3.forward) * dir;
-            positions[i] = pos + directions[i] * L_delta;
-            probability[i] = 1.0f;
-        }
+        List<GrowRecord> records = CreateRecords(pos, dir, L_delta, AngleDeviation, LOOKING_STEPS);
 
-        for(int i = 0; i < LOOKING_STEPS; i++)
-        {
-            if(positions[i].x >= Side)
-            {
-                if(positions[i].x <= Side + SideGap)
-                {
-                    probability[i] = 1.0f - (positions[i].x - Side) / SideGap;
-                }
-                else
-                {
-                    probability[i] = 0.0f;
-                }
-            }
-
-            if(positions[i].x <= -Side)
-            {
-                if(positions[i].x >= -Side - SideGap)
-                {
-                    probability[i] = 1.0f - (Side - positions[i].x) / SideGap;
-                }
-                else
-                {
-                    probability[i] = 0.0f;
-                }
-            }
-
-            if(directions[i].y < 0)
-            {
-                probability[i] = 0.0f;
-            }
-        }
-
+        ApplyLeftBound(records, Side, SideGap);
+        ApplyRightBound(records, Side, SideGap);
+        ApplyDirectionUp(records);
 
         float randomSlice = Random.value;
-        List<int> possibleIndices = new List<int>();
-        for(int i = 0; i < LOOKING_STEPS; i++)
-        {
-            if(probability[i] > randomSlice)
-            {
-                possibleIndices.Add(i);
-            }
-        }
+        List<GrowRecord> passedRecords = records.FindAll(r => r.prob > randomSlice);
 
-        int index = Random.Range(0, LOOKING_STEPS);
+        GrowRecord result = null;
 
-        if(possibleIndices.Count > 0)
+        if(passedRecords.Count > 0)
         {
-            index = possibleIndices[Random.Range(0, possibleIndices.Count)];
+            result = passedRecords[Random.Range(0, passedRecords.Count)];
         }
         else
         {
             Vector2 v = pos.x > 0 ? new Vector2(-1.0f, 1.0f) : new Vector2(1.0f, 1.0f);
-            index = GetBestDirectionIndex(directions, v);
+            result = GetBestDirectionIndex(records, v);
         }
 
-        return directions[index];
+        return result.dir;
+    }
+
+    private static List<GrowRecord> CreateRecords(Vector2 pos, Vector2 dir, float delta, float angleDeviation, float steps)
+    {
+        List<GrowRecord> records = new List<GrowRecord>();
+        for(int i = 0; i < steps; i++)
+        {
+            float a = -angleDeviation + 2.0f * angleDeviation * i / (steps - 1);
+            GrowRecord record = new GrowRecord();
+            record.dir = Quaternion.AngleAxis(a, Vector3.forward) * dir;
+            record.pos = pos + record.dir * delta;
+            record.prob = 1.0f;
+            records.Add(record);
+        }
+        return records;
+    }
+
+    private static void ApplyLeftBound(IEnumerable<GrowRecord> records, float side, float sideGap)
+    {
+        foreach(GrowRecord record in records)
+        {
+            if(record.pos.x <= -side)
+            {
+                if(record.pos.x >= -side - sideGap)
+                {
+                    record.prob = 1.0f - (side - record.pos.x) / sideGap;
+                }
+                else
+                {
+                    record.prob = 0.0f;
+                }
+            }
+        }
+    }
+
+    private static void ApplyRightBound(IEnumerable<GrowRecord> records, float side, float sideGap)
+    {
+        foreach(GrowRecord record in records)
+        {
+            if(record.pos.x >= side)
+            {
+                if(record.pos.x <= side + sideGap)
+                {
+                    record.prob = 1.0f - (record.pos.x - side) / sideGap;
+                }
+                else
+                {
+                    record.prob = 0.0f;
+                }
+            }
+        }
+    }
+
+    private void ApplyDirectionUp(IEnumerable<GrowRecord> records)
+    {
+        foreach(GrowRecord record in records)
+        {
+            if(record.pos.y < 0)
+            {
+                record.prob = 0.0f;
+            }
+        }
     }
 
     private void DebugDrawBounds()
@@ -151,26 +171,40 @@ public class Grower_Adaptive : Grower
         Debug.DrawLine(new Vector2(-Side-SideGap, 0.0f), new Vector2(-Side-SideGap, 2.0f));
     }
 
-    private static int GetBestDirectionIndex(Vector2[] directions, Vector2 v)
+    private static GrowRecord GetBestDirectionIndex(List<GrowRecord> records, Vector2 v)
     {
-        int index = 0;
-        float dot_max = Vector2.Dot(directions[0], v);
+        GrowRecord bestRecord = null;
+        float dot_max = 0;
 
-        for(int i = 1; i < directions.Length; i++)
+        foreach(GrowRecord record in records)
         {
-            float dot = Vector2.Dot(directions[i], v);
-            if(dot > dot_max)
+            float dot = Vector2.Dot(record.dir, v);
+            if((bestRecord == null) || (dot > dot_max))
             {
+                bestRecord = record;
                 dot_max = dot;
-                index = i;
             }
         }
 
-        return index;
+        return bestRecord;
     }
 
     #endregion
 
+    ////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
+
+    #region types
+
+    private class GrowRecord
+    {
+        public Vector2 dir;
+        public Vector2 pos;
+        public float prob;
+    }
+
+    #endregion
+    
     ////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////
 
