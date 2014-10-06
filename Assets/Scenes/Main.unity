@@ -265,14 +265,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 2009768320}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46dce2c49e91f4c4f8a9a0d8669fa7fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 65d82b6fa682ff747bd13e6ff1139bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Seed: 0
   L: 2
-  L_delta: .0500000007
-  PartsCount: 4
-  PartLengthDeviation: .100000001
+  L_delta: .0199999996
+  MaxAngleDeviationLeft: 25
+  MaxAngleDeviationRight: 24
 --- !u!4 &2009768322
 Transform:
   m_ObjectHideFlags: 0
