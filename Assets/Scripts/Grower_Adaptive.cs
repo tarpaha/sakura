@@ -33,11 +33,7 @@ public class Grower_Adaptive : Grower
             return new TreeData();
         }
 
-        Debug.DrawLine(new Vector2(Side, 0.0f), new Vector2(Side, 2.0f));
-        Debug.DrawLine(new Vector2(Side+SideGap, 0.0f), new Vector2(Side+SideGap, 2.0f));
-
-        Debug.DrawLine(new Vector2(-Side, 0.0f), new Vector2(-Side, 2.0f));
-        Debug.DrawLine(new Vector2(-Side-SideGap, 0.0f), new Vector2(-Side-SideGap, 2.0f));
+        DebugDrawBounds();
 
         TreeData.Branch branch = new TreeData.Branch();
 
@@ -77,87 +73,110 @@ public class Grower_Adaptive : Grower
 
     private Vector2 GetNextDir(Vector2 pos, Vector2 dir)
     {
-        int steps = 100;
-        Vector2[] dirs = new Vector2[steps];
-        Vector2[] poss = new Vector2[steps];
-        float[] pr = new float[steps];
-        for(int i = 0; i < steps; i++)
+        Vector2[] directions = new Vector2[LOOKING_STEPS];
+        Vector2[] positions = new Vector2[LOOKING_STEPS];
+        float[] probability = new float[LOOKING_STEPS];
+        for(int i = 0; i < LOOKING_STEPS; i++)
         {
-            float a = -AngleDeviation + 2.0f * AngleDeviation * i / (steps - 1);
-            dirs[i] = Quaternion.AngleAxis(a, Vector3.forward) * dir;
-            poss[i] = pos + dirs[i] * L_delta;
-            pr[i] = 1.0f;
+            float a = -AngleDeviation + 2.0f * AngleDeviation * i / (LOOKING_STEPS - 1);
+            directions[i] = Quaternion.AngleAxis(a, Vector3.forward) * dir;
+            positions[i] = pos + directions[i] * L_delta;
+            probability[i] = 1.0f;
         }
 
-
-        for(int i = 0; i < steps; i++)
+        for(int i = 0; i < LOOKING_STEPS; i++)
         {
-            if(poss[i].x >= Side)
+            if(positions[i].x >= Side)
             {
-                if(poss[i].x <= Side + SideGap)
+                if(positions[i].x <= Side + SideGap)
                 {
-                    pr[i] = 1.0f - (poss[i].x - Side) / SideGap;
+                    probability[i] = 1.0f - (positions[i].x - Side) / SideGap;
                 }
                 else
                 {
-                    pr[i] = 0.0f;
+                    probability[i] = 0.0f;
                 }
             }
 
-            if(poss[i].x <= -Side)
+            if(positions[i].x <= -Side)
             {
-                if(poss[i].x >= -Side - SideGap)
+                if(positions[i].x >= -Side - SideGap)
                 {
-                    pr[i] = 1.0f - (Side - poss[i].x) / SideGap;
+                    probability[i] = 1.0f - (Side - positions[i].x) / SideGap;
                 }
                 else
                 {
-                    pr[i] = 0.0f;
+                    probability[i] = 0.0f;
                 }
             }
 
-            if(dirs[i].y < 0)
+            if(directions[i].y < 0)
             {
-                pr[i] = 0.0f;
+                probability[i] = 0.0f;
             }
         }
 
 
-        float d = Random.value;
-        List<int> ids = new List<int>();
-        for(int i = 0; i < steps; i++)
+        float randomSlice = Random.value;
+        List<int> possibleIndices = new List<int>();
+        for(int i = 0; i < LOOKING_STEPS; i++)
         {
-            if(pr[i] > d)
+            if(probability[i] > randomSlice)
             {
-                ids.Add(i);
+                possibleIndices.Add(i);
             }
         }
 
-        int index = Random.Range(0, steps);
+        int index = Random.Range(0, LOOKING_STEPS);
 
-        if(ids.Count > 0)
+        if(possibleIndices.Count > 0)
         {
-            index = ids[Random.Range(0, ids.Count)];
+            index = possibleIndices[Random.Range(0, possibleIndices.Count)];
         }
         else
         {
             Vector2 v = pos.x > 0 ? new Vector2(-1.0f, 1.0f) : new Vector2(1.0f, 1.0f);
+            index = GetBestDirectionIndex(directions, v);
+        }
 
-            float t_max = Vector2.Dot(dirs[0], v);
-            index = 0;
-            for(int i = 1; i < steps; i++)
+        return directions[index];
+    }
+
+    private void DebugDrawBounds()
+    {
+        Debug.DrawLine(new Vector2(Side, 0.0f), new Vector2(Side, 2.0f));
+        Debug.DrawLine(new Vector2(Side+SideGap, 0.0f), new Vector2(Side+SideGap, 2.0f));
+        
+        Debug.DrawLine(new Vector2(-Side, 0.0f), new Vector2(-Side, 2.0f));
+        Debug.DrawLine(new Vector2(-Side-SideGap, 0.0f), new Vector2(-Side-SideGap, 2.0f));
+    }
+
+    private static int GetBestDirectionIndex(Vector2[] directions, Vector2 v)
+    {
+        int index = 0;
+        float dot_max = Vector2.Dot(directions[0], v);
+
+        for(int i = 1; i < directions.Length; i++)
+        {
+            float dot = Vector2.Dot(directions[i], v);
+            if(dot > dot_max)
             {
-                float t = Vector2.Dot(dirs[i], v);
-                if(t > t_max)
-                {
-                    t_max = t;
-                    index = i;
-                }
+                dot_max = dot;
+                index = i;
             }
         }
 
-        return dirs[index];
+        return index;
     }
+
+    #endregion
+
+    ////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
+
+    #region const
+
+    private const int LOOKING_STEPS = 100;
 
     #endregion
 }
