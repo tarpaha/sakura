@@ -16,6 +16,9 @@ public class Grower_Adaptive : Grower
     public float Side    = 0.4f;
     public float SideGap = 0.2f;
 
+    public float Width01 = 0.1f;
+    public float Width02 = 0.01f;
+
     #endregion
 
     ////////////////////////////////////////////////////////////////////////
@@ -43,8 +46,8 @@ public class Grower_Adaptive : Grower
         
         float l = 0.0f;
 
-        float width = 0.05f;
-        float dw = -0.01f;
+        float width = Width01;
+        float dw = (Width02 - Width01) / (L / L_delta);
 
         Random.seed = Seed;
         while(l <= L)
@@ -56,7 +59,7 @@ public class Grower_Adaptive : Grower
             l += L_delta;           
 
             pos += dir * L_delta;
-            width += L_delta * dw;
+            width += dw;
         }
 
         TreeData treeData = new TreeData();
