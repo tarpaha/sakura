@@ -38,7 +38,7 @@ public class Sakura : MonoBehaviour
 
     private void GrowAndDraw()
     {
-        _treeData = Grower.Grow();
+        _treeData = Grower.Grow(Vector2.zero, Vector2.up);
         Drawer.Draw(_treeData);
     }
 

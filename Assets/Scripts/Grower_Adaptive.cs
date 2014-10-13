@@ -26,7 +26,7 @@ public class Grower_Adaptive : Grower
 
     #region Grower
 
-    public override TreeData Grow()
+    public override TreeData Grow(Vector2 pos, Vector2 dir)
     {
         if(L_delta < 0.01f)
         {
@@ -37,9 +37,6 @@ public class Grower_Adaptive : Grower
 
         TreeData.Branch branch = new TreeData.Branch();
 
-        Vector2 dir = Vector2.up;
-        Vector2 pos = Vector3.zero;
-        
         float l = 0.0f;
 
         float width = Width01;

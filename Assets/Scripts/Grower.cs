@@ -6,7 +6,7 @@ public abstract class Grower : MonoBehaviour
 {
     #region public
 
-    public abstract TreeData Grow();
+    public abstract TreeData Grow(Vector2 pos, Vector2 dir);
 
     #endregion
 }
