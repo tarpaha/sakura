@@ -408,8 +408,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ed5918782ddf164385832c7915bd927, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Seed: 0
-  L: 2
+  Seed: 6
+  L: 2.5
   L_delta: .0199999996
   AngleDeviation: 25
   Side: .400000006
