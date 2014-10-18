@@ -45,7 +45,7 @@ public class Grower_Adaptive : Grower
         Random.seed = Seed;
         while(l <= L)
         {
-            branch.AddVertex(new TreeData.Vertex(pos, dir, width));
+			branch.AddVertex(new TreeData.Vertex(pos, dir, width, l / L));
 
             dir = GetNextDir(pos, dir);
 

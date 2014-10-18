@@ -12,6 +12,7 @@ public class Grower_Branches : Grower
 	public Grower_Adaptive BranchGrower;
 	public int BranchesCount;
 	public float BranchWidthCoeff;
+	public float BranchLengthCoeff;
 
     #endregion
 
@@ -43,6 +44,7 @@ public class Grower_Branches : Grower
         for(int i = 0; i < BranchesCount; i++)
         {
 			BranchGrower.Seed = Seed + i;
+			BranchGrower.L = (1.0f - branchesRoots[i].T) * TrunkGrower.L * BranchLengthCoeff;
 			BranchGrower.Width01 = BranchWidthCoeff * branchesRoots[i].Width;
 
 			AddBranch(tree, BranchGrower, branchesRoots[i], Random.Range(0, 2) == 0);
@@ -69,7 +71,8 @@ public class Grower_Branches : Grower
                     TreeData.Vertex branchRoot = new TreeData.Vertex(
                         current_v.Pos,
                         current_v.Dir,
-                        current_v.Width);
+                        current_v.Width,
+						current_v.T);
                     result.Add(branchRoot);
                 }
             }
