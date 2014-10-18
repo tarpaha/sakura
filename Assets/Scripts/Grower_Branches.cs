@@ -7,8 +7,10 @@ public class Grower_Branches : Grower
 {
     #region exposed
 
-    public Grower Trunk;
-    public Grower[] Branches;
+    public Grower_Adaptive TrunkGrower;
+	public Grower_Adaptive BranchGrower;
+	public int BranchesCount;
+	public float BranchWidthCoeff;
 
     #endregion
 
@@ -19,7 +21,7 @@ public class Grower_Branches : Grower
 
     public override TreeData Grow(Vector2 pos, Vector2 dir)
     {
-        TreeData tree = Trunk.Grow(pos, dir);
+        TreeData tree = TrunkGrower.Grow(pos, dir);
         AddBranches(tree);
         return tree;
     }
@@ -34,10 +36,11 @@ public class Grower_Branches : Grower
     private void AddBranches(TreeData tree)
     {
         TreeData.Branch trunk = tree.Branches.First();
-        TreeData.Vertex[] branchesRoots = GetBranchesRoots(trunk, Branches.Length);
-        for(int i = 0; i < Branches.Length; i++)
+        TreeData.Vertex[] branchesRoots = GetBranchesRoots(trunk, BranchesCount);
+        for(int i = 0; i < BranchesCount; i++)
         {
-            AddBranch(tree, Branches[i], branchesRoots[i], (i % 2) == 0);
+			BranchGrower.Width01 = BranchWidthCoeff * branchesRoots[i].Width;
+            AddBranch(tree, BranchGrower, branchesRoots[i], (i % 2) == 0);
         }
     }
 
@@ -71,7 +74,7 @@ public class Grower_Branches : Grower
         return result.ToArray();
     }
 
-    private static void AddBranch(TreeData tree, Grower branchGrower, TreeData.Vertex branchRoot, bool left)
+    private static void AddBranch(TreeData tree, Grower_Adaptive branchGrower, TreeData.Vertex branchRoot, bool left)
     {
         TreeData branch = branchGrower.Grow(
             branchRoot.Pos,
