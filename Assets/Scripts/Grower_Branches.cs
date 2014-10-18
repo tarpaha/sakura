@@ -7,6 +7,7 @@ public class Grower_Branches : Grower
 {
     #region exposed
 
+	public int Seed;
     public Grower_Adaptive TrunkGrower;
 	public Grower_Adaptive BranchGrower;
 	public int BranchesCount;
@@ -21,7 +22,9 @@ public class Grower_Branches : Grower
 
     public override TreeData Grow(Vector2 pos, Vector2 dir)
     {
+		TrunkGrower.Seed = Seed;
         TreeData tree = TrunkGrower.Grow(pos, dir);
+
         AddBranches(tree);
         return tree;
     }
@@ -39,8 +42,10 @@ public class Grower_Branches : Grower
         TreeData.Vertex[] branchesRoots = GetBranchesRoots(trunk, BranchesCount);
         for(int i = 0; i < BranchesCount; i++)
         {
+			BranchGrower.Seed = Seed + i;
 			BranchGrower.Width01 = BranchWidthCoeff * branchesRoots[i].Width;
-            AddBranch(tree, BranchGrower, branchesRoots[i], (i % 2) == 0);
+
+			AddBranch(tree, BranchGrower, branchesRoots[i], Random.Range(0, 2) == 0);
         }
     }
 
