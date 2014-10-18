@@ -10,7 +10,8 @@ public class Grower_Branches : Grower
 	public int Seed;
     public Grower_Adaptive TrunkGrower;
 	public Grower_Adaptive BranchGrower;
-	public int BranchesCount;
+	public int BranchesCountMin;
+	public int BranchesCountMax;
 	public float BranchWidthCoeff;
 	public float BranchLengthCoeff;
 
@@ -39,9 +40,11 @@ public class Grower_Branches : Grower
 
     private void AddBranches(TreeData tree)
     {
+		int branchesCount = Random.Range(BranchesCountMin, BranchesCountMax + 1);
+
         TreeData.Branch trunk = tree.Branches.First();
-        TreeData.Vertex[] branchesRoots = GetBranchesRoots(trunk, BranchesCount);
-        for(int i = 0; i < BranchesCount; i++)
+        TreeData.Vertex[] branchesRoots = GetBranchesRoots(trunk, branchesCount);
+        for(int i = 0; i < branchesCount; i++)
         {
 			BranchGrower.Seed = Seed + i;
 			BranchGrower.L = (1.0f - branchesRoots[i].T) * TrunkGrower.L * BranchLengthCoeff;
