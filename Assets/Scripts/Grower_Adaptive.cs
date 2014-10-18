@@ -152,7 +152,7 @@ public class Grower_Adaptive : Grower
     {
         foreach(GrowRecord record in records)
         {
-            if(record.pos.y < 0)
+            if(record.dir.y < 0)
             {
                 record.prob = 0.0f;
             }
