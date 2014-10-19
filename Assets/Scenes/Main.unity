@@ -74,53 +74,6 @@ NavMeshSettings:
     widthInaccuracy: 16.666666
     heightInaccuracy: 10
   m_NavMesh: {fileID: 0}
---- !u!1 &287665865
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 287665867}
-  - 114: {fileID: 287665866}
-  m_Layer: 0
-  m_Name: Branch02
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &287665866
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 287665865}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ed5918782ddf164385832c7915bd927, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Seed: 3
-  L: .5
-  L_delta: .0199999996
-  AngleDeviation: 25
-  Side: .400000006
-  SideGap: .200000003
-  Width01: .0299999993
-  Width02: .00999999978
---- !u!4 &287665867
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 287665865}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 699194471}
-  m_RootOrder: 2
 --- !u!1 &334795654
 GameObject:
   m_ObjectHideFlags: 0
@@ -215,7 +168,7 @@ GameObject:
   - 4: {fileID: 427349757}
   - 114: {fileID: 427349758}
   m_Layer: 0
-  m_Name: Branch01
+  m_Name: Branch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -280,7 +233,6 @@ Transform:
   m_Children:
   - {fileID: 2009768322}
   - {fileID: 427349757}
-  - {fileID: 287665867}
   m_Father: {fileID: 1581496905}
   m_RootOrder: 1
 --- !u!114 &699194472
@@ -294,10 +246,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47d99dfb9390f1a4390b94bbaa21e4f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Trunk: {fileID: 2009768321}
-  Branches:
-  - {fileID: 427349758}
-  - {fileID: 287665866}
+  Seed: 9
+  TrunkGrower: {fileID: 2009768321}
+  BranchGrower: {fileID: 427349758}
+  BranchesCountMin: 2
+  BranchesCountMax: 5
+  BranchWidthCoeff: .800000012
+  BranchLengthCoeff: .600000024
 --- !u!1 &1261707121
 GameObject:
   m_ObjectHideFlags: 0
